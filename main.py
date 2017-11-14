@@ -192,7 +192,7 @@ def train_process_worker(sent_queue, data_queue, word2idx, freq, table_ptr_val, 
             while i < sent_len:
                 word = sent[i]
                 f = freq[word] / args.train_words
-                pb = (np.sqrt(f / args.sample) + 1) * args.sample / f;
+                pb = (np.sqrt(f / args.sample) + 1) * args.sample / f
 
                 if pb > np.random.random_sample():
                     sent_id.append( word2idx[word] )
@@ -301,15 +301,15 @@ def train_process(p_id, word_count_actual, word2idx, word_list, freq, args, mode
             if none_cnt >= args.num_workers:
                 break
         else:
-            # lr anneal & output    
+            # lr anneal & output
             if word_count_actual.value - prev_word_cnt > 10000:
                 lr = args.lr * (1 - word_count_actual.value / (args.iter * args.train_words))
                 if lr < 0.0001 * args.lr:
-                    lr = 0.0001 * args.lr 
+                    lr = 0.0001 * args.lr
                 for param_group in optimizer.param_groups:
                     param_group['lr'] = lr
 
-                sys.stdout.write("\rAlpha: %0.8f, Progess: %0.2f, Words/sec: %f" % (lr, word_count_actual.value / (args.iter * args.train_words) * 100, word_count_actual.value / (time.monotonic() - args.t_start)))
+                sys.stdout.write("\rAlpha: %0.8f, Progress: %0.2f, Words/sec: %f" % (lr, word_count_actual.value / (args.iter * args.train_words) * 100, word_count_actual.value / (time.monotonic() - args.t_start)))
                 sys.stdout.flush()
                 prev_word_cnt = word_count_actual.value
 
@@ -319,7 +319,7 @@ def train_process(p_id, word_count_actual, word2idx, word_list, freq, args, mode
                 data = Variable(torch.LongTensor(d).cuda(), requires_grad=False)
             else:
                 data = Variable(torch.LongTensor(d), requires_grad=False)
-            
+
             if args.cbow == 1:
                 #print("@train_process-part1: %f" % (time.process_time() - tStart))
                 #tStart = time.process_time()
@@ -351,12 +351,12 @@ if __name__ == '__main__':
     word2idx, word_list, freq = build_vocab(args)
 
     word_count_actual = mp.Value('i', 0)
-    
+
     model = init_net(args)
     model.share_memory()
     if args.cuda:
         model.cuda()
-    
+
     vars(args)['t_start'] = time.monotonic()
     processes = []
     for p_id in range(args.processes):
@@ -377,4 +377,3 @@ if __name__ == '__main__':
 
     data_producer.write_embs(args.output, word_list, embs, args.vocab_size, args.size)
     print("")
-

@@ -3,3 +3,7 @@
 *.so
 *.txt
 build/*
+
+wikismall
+wikismall_en
+__pycache__/
